@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "DOIP"
+name = "UDS"
 version = "0.1.0"
