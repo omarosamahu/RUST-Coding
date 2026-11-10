@@ -2,7 +2,8 @@ use std::{println, vec};
 
 pub mod nrc {
     pub const CONDITIONS_NOT_CORRECT: u8 = 0x22;
-    pub const UNKOWN: u8 = 0x22;
+    pub const NEGATIVS_RESPONSE: u8 = 0x7F;
+    pub const UNKOWN: u8 = 0xFF;
 }
 
 pub mod service_id {
@@ -12,7 +13,6 @@ pub mod service_id {
 pub mod service_index {
     pub const READ_DID_IDX: usize = 0;
 }
-
 
 pub trait UDSService {
     fn execute_service(&mut self, req: &UdsRequest, _did_list: &Vec<u16>) -> Result<Vec<u8>, Vec<u8>>;
@@ -32,7 +32,7 @@ impl UDSService for ReadRequest {
         }
 
         println!("Sending Negative response for DID {} {}", req._payload[1], req._payload[2]);
-        Err([0x71, nrc::CONDITIONS_NOT_CORRECT, req._payload[1], req._payload[2]].to_vec())
+        Err([nrc::NEGATIVS_RESPONSE, nrc::CONDITIONS_NOT_CORRECT, req._payload[1], req._payload[2]].to_vec())
     }
 }
 
