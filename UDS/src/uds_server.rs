@@ -1,41 +1,33 @@
-use core::sync;
 use std::{println, vec};
+
+pub mod nrc {
+    pub const CONDITIONS_NOT_CORRECT: u8 = 0x22;
+}
+
+pub mod service_id {
+    pub const READ_DID: u8 = 0x22;
+}
 
 #[allow(dead_code)]
 pub trait UDSService {
-    fn execute_service(&mut self, req: &UdsRequest);
-    fn get_response(&self) -> UdsResponse;
+    fn execute_service(&mut self, req: &UdsRequest, _did_list: &Vec<u16>) -> Result<Vec<u8>, Vec<u8>>;
 }
 
-struct ReadRequest {
-    _did: u8,
-    _did_list : Vec<u8>,
-    _response: UdsResponse
-}
+pub struct ReadRequest;
 
 impl UDSService for ReadRequest {
 
-    fn execute_service(&mut self, req: &UdsRequest){
+    fn execute_service(&mut self, req: &UdsRequest, _did_list: &Vec<u16>) -> Result<Vec<u8>, Vec<u8>>{
         println!("Hanling DID {}", req._payload[1]);
-        self.read_did(req._payload[1]);
-    }
-    fn get_response(&self) -> UdsResponse {
-        self._response.clone()
-    }
-}
-
-impl ReadRequest {
-
-    fn new() -> Self {
-        Self { _did: 0x0, _did_list: vec![0x01, 0x02, 0x03], _response: UdsResponse {
-            request_type : String::from("") , payload: Vec::new()
-        }  }
-    } 
-    fn read_did(&mut self, did: u8){        
-        
-        if self._did_list.contains(&did) {
-            self._response = UdsResponse { request_type : String::from("Positive response for Read Request") , payload: vec![0x62, self._did]};
+        let did = u16::from_be_bytes([req._payload[1], req._payload[2]]);
+        if _did_list.contains(&did) {
+            println!("Sending positive response for DID {}", req._payload[1]);
+            let response:Vec<u8> = vec![0x62, req._payload[1], req._payload[2]];
+            return Ok(response);
         }
+
+        println!("Sending Negative response for DID {} {}", req._payload[1], req._payload[2]);
+        Err([0x71, nrc::CONDITIONS_NOT_CORRECT, req._payload[1], req._payload[2]].to_vec())
     }
 }
 
@@ -45,16 +37,15 @@ pub struct UDSManager {
 
 impl UDSManager {
     pub fn new() -> Self {
-        Self { services: vec![Box::new(ReadRequest::new())] }
+        Self { services: vec![Box::new(ReadRequest)] }
     }
-    pub fn handle_request(&mut self, req: &UdsRequest) -> UdsResponse{
-        if req._sid == 0x22 {   
+    pub fn handle_request(&mut self, req: &UdsRequest, did_list: &Vec<u16>) -> Result<Vec<u8>, Vec<u8>>{
+        if req._sid == service_id::READ_DID {   
             let  read_request    = &mut self.services[0];
-            read_request.execute_service(&req);
-            return read_request.get_response();
+            return read_request.execute_service(&req, &did_list);
         }
 
-        UdsResponse { request_type: String::from("Unsupported type"), payload: vec![0xFF, 0xFF, 0xFF] }
+        Err([0xFF,0xFF,0xFF].to_vec())
     }
 }
 
@@ -65,12 +56,6 @@ pub struct UdsRequest {
     pub _payload: Vec<u8>,
 }
 
-#[derive(Debug, Clone)]
-#[allow(dead_code)]
-pub struct UdsResponse {
-    pub request_type: String,
-    pub payload: Vec<u8>
-}
 
 /*
     type UDSResponseHandler = Box<dyn Fn(UdsRequest)>;
