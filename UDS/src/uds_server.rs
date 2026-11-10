@@ -2,13 +2,18 @@ use std::{println, vec};
 
 pub mod nrc {
     pub const CONDITIONS_NOT_CORRECT: u8 = 0x22;
+    pub const UNKOWN: u8 = 0x22;
 }
 
 pub mod service_id {
     pub const READ_DID: u8 = 0x22;
 }
 
-#[allow(dead_code)]
+pub mod service_index {
+    pub const READ_DID_IDX: usize = 0;
+}
+
+
 pub trait UDSService {
     fn execute_service(&mut self, req: &UdsRequest, _did_list: &Vec<u16>) -> Result<Vec<u8>, Vec<u8>>;
 }
@@ -41,11 +46,11 @@ impl UDSManager {
     }
     pub fn handle_request(&mut self, req: &UdsRequest, did_list: &Vec<u16>) -> Result<Vec<u8>, Vec<u8>>{
         if req._sid == service_id::READ_DID {   
-            let  read_request    = &mut self.services[0];
+            let  read_request = &mut self.services[service_index::READ_DID_IDX];
             return read_request.execute_service(&req, &did_list);
         }
 
-        Err([0xFF,0xFF,0xFF].to_vec())
+        Err([nrc::UNKOWN, nrc::UNKOWN, nrc::UNKOWN].to_vec())
     }
 }
 
