@@ -15,9 +15,9 @@ fn main() {
 
     let did_list    = [0xF001,0xF002,0xF003].to_vec();
 
-    let resposnse = server.handle_request(&request, &did_list);
+    // let resposnse = server.handle_request(&request);
 
-    println!("{:#X?}", resposnse);
+    // println!("{:#X?}", resposnse);
 }
 
 

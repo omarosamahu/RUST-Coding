@@ -1,15 +1,15 @@
 use crate::UdsRequest;
 use crate::common::*;
 
-pub trait UDSService{
-    fn execute_service(&mut self, req: &UdsRequest, _did_list: &Vec<u16>) -> Result<Vec<u8>, Vec<u8>>;
+pub trait UDSService: Send + Sync{
+    fn execute_service(&self, req: &UdsRequest, _did_list: &Vec<u16>) -> Result<Vec<u8>, Vec<u8>>;
 }
 
 pub struct ReadRequest;
 
 impl UDSService for ReadRequest {
 
-    fn execute_service(&mut self, req: &UdsRequest, _did_list: &Vec<u16>) -> Result<Vec<u8>, Vec<u8>>{
+    fn execute_service(&self, req: &UdsRequest, _did_list: &Vec<u16>) -> Result<Vec<u8>, Vec<u8>>{
 
         if req._payload.len() < 2 {
             println!("Incorrect message length");
