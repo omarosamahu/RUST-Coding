@@ -6,7 +6,6 @@ pub mod nrc {
     pub const UNKOWN: u8 = 0xFF;
 }
 
-
 pub mod service_id {
     pub const READ_DID: u8 = 0x22;
 }
@@ -14,3 +13,7 @@ pub mod service_id {
 pub mod service_index {
     pub const READ_DID_IDX: usize = 0;
 }
+
+pub const READ_POSITIVE_RESPONSE: u8 = 0x62;
+pub const LOW_BYTE_INDEX: usize = 0;
+pub const HIGH_BYTE_INDEX: usize = 1;

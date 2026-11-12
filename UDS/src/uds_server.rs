@@ -22,17 +22,17 @@ impl UDSServer {
     }
 }
 pub struct UDSManager {
-    pub services: Vec<Box<dyn UDSService>>
+    pub services: Vec<Box<dyn UDSService>>,
+    did_list: Vec<u16> // TODO: This needs to be parsed from config file 
 }
 
 impl UDSManager {
     pub fn new() -> Self {
-        Self { services: vec![Box::new(ReadRequest)] }
+        Self { services: vec![Box::new(ReadRequest)], did_list: [0xF001,0xF002,0xF003].to_vec() }
     }
     pub fn handle_request(&self, req: &UdsMessage) -> Result<Vec<u8>, Vec<u8>>{
-        let did_list    = [0xF001,0xF002,0xF003].to_vec();
         match req.request._sid {
-            service_id::READ_DID => self.services[service_index::READ_DID_IDX].execute_service(&req.request, &did_list),
+            service_id::READ_DID => self.services[service_index::READ_DID_IDX].execute_service(&req.request, &self.did_list),
             _ => Err([nrc::SERVICE_NOT_SUPPORTED].to_vec())
         }
     }
