@@ -9,8 +9,8 @@ Status: work in progress. This is a learning project, and the service set is sti
 - Service dispatch by Service ID (SID) through a UDSService trait
 - Positive responses and negative responses
 
-Supported services
-SID	Service	Status
+**Supported services
+SID	Service	Status**
 - 0x10	Diagnostic Session Control	**Implemented**
 - 0x22	Read Data By Identifier	**Implemented**
 - 0x2E	Write Data By Identifier	**Implemented**
