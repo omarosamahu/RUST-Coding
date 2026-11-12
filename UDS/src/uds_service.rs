@@ -15,7 +15,7 @@ impl UDSService for ReadRequest {
             return Err(vec![nrc::NEGATIVE_RESPONSE, nrc::INCORRECT_MESSAGE_LENGTH]);
         }
 
-        println!("Hanling DID {}", req._payload[1]);
+        println!("Hanling DID {} {}", req._payload[LOW_BYTE_INDEX] , req._payload[HIGH_BYTE_INDEX]);
         let did = u16::from_be_bytes([req._payload[LOW_BYTE_INDEX], req._payload[HIGH_BYTE_INDEX]]);
         if _did_list.contains(&did) {
             println!("Sending positive response for DID {} {}", req._payload[LOW_BYTE_INDEX], req._payload[HIGH_BYTE_INDEX]);
