@@ -1,7 +1,7 @@
 use crate::UdsRequest;
 use crate::common::*;
 
-pub trait UDSService: Send + Sync{
+pub trait UDSService: Send + Sync {
     fn execute_service(&self, req: &UdsRequest, _did_list: &Vec<u16>) -> Result<Vec<u8>, Vec<u8>>;
 }
 
@@ -13,7 +13,7 @@ impl UDSService for ReadRequest {
 
         if req._payload.len() < 2 {
             println!("Incorrect message length");
-            return Err(vec![nrc::NEGATIVS_RESPONSE, nrc::INCORRECT_MESSAGE_LENGTH]);
+            return Err(vec![nrc::NEGATIVE_RESPONSE, nrc::INCORRECT_MESSAGE_LENGTH]);
         }
 
         println!("Hanling DID {}", req._payload[1]);
@@ -25,6 +25,6 @@ impl UDSService for ReadRequest {
         }
 
         println!("Sending Negative response for DID {} {}", req._payload[0], req._payload[1]);
-        Err([nrc::NEGATIVS_RESPONSE, nrc::CONDITIONS_NOT_CORRECT, req._payload[0], req._payload[1]].to_vec())
+        Err([nrc::NEGATIVE_RESPONSE, nrc::CONDITIONS_NOT_CORRECT, req._payload[0], req._payload[1]].to_vec())
     }
 }
