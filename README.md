@@ -7,7 +7,7 @@ Status: work in progress. This is a learning project, and the service set is sti
 Features
 - Async request handling built on tokio (mpsc for requests, oneshot for per-request replies)
 - Service dispatch by Service ID (SID) through a UDSService trait
-- Positive responses and negative responses (0x7F <SID> <NRC>)
+- Positive responses and negative responses
 
 Supported services
 SID	Service	Status
