@@ -14,11 +14,10 @@ impl UDSServer {
     pub async fn run(mut self) {
         while let Some(message) = self.rx.recv().await {
             let manager = Arc::clone(&self.manager);
-        tokio::spawn(async move {
-            
-            let response = manager.handle_request(&message);
-            let _ = message.response_tx.send(response);
-        });
+            tokio::spawn(async move {
+                let response = manager.handle_request(&message);
+                let _ = message.response_tx.send(response);
+            });
         }
     }
 }
