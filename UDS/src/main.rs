@@ -5,6 +5,9 @@ pub mod uds_server;
 pub mod uds_service;
 pub mod common;
 pub mod uds_client;
+pub mod read_did_service;
+pub mod session_control_service;
+
 use uds_server::{*};
 use uds_message::{*};
 
@@ -30,14 +33,14 @@ async fn main() {
         let client = UDSClient{tx};
         
         let client1 = client.clone();
-        let res = client1.send_request(UdsRequest { _sid: 0x22, _payload: vec![0xF0,0x01] }).await;
+        let res = client1.send_request(UdsRequest { _sid: 0x10, _payload: vec![0x02] }).await;
         match res {
             Ok(data) => println!("Got positive response {:#X?}", data),
             Err(nrc) => println!("Got Negative response {:#X?}", nrc),
         };
 
         let client2 = client.clone();
-        let res = client2.send_request(UdsRequest { _sid: 0x22, _payload: vec![0xF] }).await;
+        let res = client2.send_request(UdsRequest { _sid: 0x22, _payload: vec![0xF0,0x01] }).await;
         match res {
             Ok(data) => println!("Got positive response {:#X?}", data),
             Err(nrc) => println!("Got Negative response {:#X?}", nrc),
