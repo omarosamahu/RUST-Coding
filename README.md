@@ -11,9 +11,9 @@ Features
 
 Supported services
 SID	Service	Status
-- 0x10	Diagnostic Session Control	Implemented
-- 0x22	Read Data By Identifier	Implemented
-- 0x2E	Write Data By Identifier	Implemented
-- 0x31	Routine Control	Planned
-- 0x3E	Tester Present	Planned
-- 0x27	Security Access	Planned
+- 0x10	Diagnostic Session Control	**Implemented**
+- 0x22	Read Data By Identifier	**Implemented**
+- 0x2E	Write Data By Identifier	**Implemented**
+- 0x31	Routine Control	**Planned**
+- 0x3E	Tester Present	**Planned**
+- 0x27	Security Access	**Planned**
